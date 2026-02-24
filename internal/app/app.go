@@ -55,6 +55,7 @@ func DrawScreen() error {
 	}
 
 	ticker := time.NewTicker(time.Millisecond * 16)
+	defer ticker.Stop()
 
 	for {
 		select {
@@ -63,6 +64,7 @@ func DrawScreen() error {
 			switch ev := ev.(type) {
 			case *tcell.EventResize:
 				s.Sync()
+				width, height = s.Size()
 			case *tcell.EventKey:
 				if ev.Key() == tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
 					return nil
