@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 
@@ -8,17 +9,24 @@ import (
 	"github.com/talismanch1k/gorain/internal/logger"
 )
 
-func main() {
+func run() error {
 	fileClose, err := logger.SetupLogger()
 	if err != nil {
-		panic("Can't setup logger")
+		return fmt.Errorf("initialize logger: %w", err)
 	}
 	defer fileClose()
-
 	slog.Info("Application started")
 
 	if err = app.DrawScreen(); err != nil {
-		slog.Error("Failed to draw screen", "err", err)
+		return fmt.Errorf("draw screen: %w", err)
+	}
+
+	return nil
+}
+
+func main() {
+	if err := run(); err != nil {
+		slog.Error("program failed", "err", err)
 		os.Exit(1)
 	}
 }

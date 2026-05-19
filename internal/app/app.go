@@ -1,60 +1,45 @@
+// Package app render/draw drops on screen
 package app
 
 import (
 	"errors"
-	"log/slog"
+	"fmt"
 	"math/rand"
-	"os"
 	"time"
 
 	"github.com/gdamore/tcell/v3"
 	"github.com/gdamore/tcell/v3/color"
-	"github.com/talismanch1k/gorain/internal/app/rain"
 )
 
-var (
-	ErrExitedScreen = errors.New("Screen was closed unexpectedly")
-)
+var ErrExitedScreen = errors.New("screen was closed unexpectedly")
 
 func DrawScreen() error {
 	s, err := tcell.NewScreen()
 	if err != nil {
-		slog.Error("Failed to create screen", "err", err)
-		os.Exit(1)
+		return fmt.Errorf("create screen: %w", err)
 	}
 	defer s.Fini()
 
 	if err = s.Init(); err != nil {
-		slog.Error("Failed to initialize screen", "err", err)
-		os.Exit(1)
+		return fmt.Errorf("initialize screen: %w", err)
 	}
 
 	defStyle := tcell.StyleDefault.Background(color.Default).Foreground(color.Default)
 	s.SetStyle(defStyle)
 	s.Clear()
 
-	quit := func() {
-		maybePanic := recover()
-		s.Fini()
-		if maybePanic != nil {
-			slog.Error("Recovered from panic", "panic", maybePanic)
-			panic(maybePanic)
-		}
-		slog.Info("Quitting app")
-	}
-	defer quit()
-
 	width, height := s.Size()
-	numDrops := 30
-	drops := make([]*rain.Drop, numDrops)
+	numDrops := width / 2
+	drops := make([]*Drop, numDrops)
+
 	for i := range drops {
-		drops[i] = rain.NewDrop(
+		drops[i] = NewDrop(
 			rand.Intn(width),
-			-rand.Float64()*float64(height),
+			-rand.Float64()*float64(2*height),
 		)
 	}
 
-	ticker := time.NewTicker(time.Millisecond * 16)
+	ticker := time.NewTicker(16 * time.Millisecond)
 	defer ticker.Stop()
 
 	for {
@@ -75,13 +60,11 @@ func DrawScreen() error {
 			s.Clear()
 
 			for _, d := range drops {
-				d.Fall(height)
+				d.Fall(height, width)
 				d.Draw(s)
 			}
 
 			s.Show()
-
 		}
 	}
-	return ErrExitedScreen
 }
