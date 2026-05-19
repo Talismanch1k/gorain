@@ -9,6 +9,13 @@ import (
 
 const maxLen = 3
 
+var speed = interval[float64]{min: 0.4, max: 1}
+
+type interval[T any] struct {
+	min T
+	max T
+}
+
 var symbols = []rune{'|', '│', '┃', '╽', '·'}
 
 type Drop struct {
@@ -23,7 +30,7 @@ func NewDrop(x int, y float64) *Drop {
 	return &Drop{
 		x:      x,
 		y:      y,
-		speed:  min(rand.Float64()+0.4, 1),
+		speed:  min(rand.Float64()+speed.min, speed.max),
 		length: rand.Intn(maxLen),
 		symbol: symbols[rand.Intn(len(symbols))],
 	}
@@ -32,7 +39,7 @@ func NewDrop(x int, y float64) *Drop {
 func (d *Drop) Fall(h, w int) {
 	d.y += d.speed
 	if d.y > float64(h) {
-		d.y = -float64(h)
+		d.y = -rand.Float64() * float64(2*h)
 		d.x = rand.Intn(w)
 	}
 }
@@ -45,7 +52,17 @@ func (d *Drop) Draw(s tcell.Screen) {
 		return
 	}
 
-	style := tcell.StyleDefault.Foreground(color.Blue)
+	intensity := remapInterval(d.speed, speed, interval[float64]{0.0, 1.0})
+
+	r := int32(0)
+	g := int32(40 + intensity*120)
+	b := int32(20 + intensity*235)
+
+	style := tcell.StyleDefault.Foreground(color.NewRGBColor(r, g, b))
 
 	s.SetContent(d.x, y, d.symbol, nil, style)
+}
+
+func remapInterval(val float64, old, new interval[float64]) float64 {
+	return (val-old.min)*(new.max-new.min)/(old.max-old.min) + new.min
 }
