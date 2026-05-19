@@ -29,7 +29,7 @@ func DrawScreen() error {
 	s.Clear()
 
 	width, height := s.Size()
-	numDrops := width / 2
+	numDrops := (height + width) / 2
 	drops := make([]*Drop, numDrops)
 
 	for i := range drops {
