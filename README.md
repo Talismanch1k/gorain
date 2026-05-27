@@ -1,9 +1,10 @@
-<p align="center">
+# 🌧️ Gorain 🌧️
+
+<p>
   <a href="#english">English</a> |
   <a href="#russian">Русский</a>
 </p>
 
-# 🌧️ Gorain 🌧️
 
 <a id="english"></a>
 
