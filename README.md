@@ -1,4 +1,4 @@
-# Gorain
+# 🌧️ Gorain 🌧️
 
 Gorain is a small terminal animation written in Go. It draws falling rain drops directly in the terminal using [`tcell`](https://github.com/gdamore/tcell), with randomized drop positions, speed, length, symbols, and color intensity.
 
@@ -59,8 +59,8 @@ Gorain writes runtime logs to `log.log` in the current working directory. The fi
 
 ## Future plans
 
-[ ] - Change drawing speed based on monitor frequency
-[ ] - Add options for configuration
+- [ ] Change drawing speed based on monitor frequency
+- [ ] Add options for configuration
 
 ## License
 
