@@ -3,6 +3,8 @@ package logger
 import (
 	"log/slog"
 	"os"
+
+	"github.com/talismanch1k/gorain/internal/closer"
 )
 
 func SetupLogger() (func(), error) {
@@ -14,12 +16,11 @@ func SetupLogger() (func(), error) {
 	logger := slog.New(slog.NewTextHandler(f, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}))
-
 	slog.SetDefault(logger)
 
 	fileClose := func() {
 		slog.Info("Logger shutting down, file closing")
-		f.Close()
+		closer.CloseOrLog(f)
 	}
 
 	return fileClose, nil
