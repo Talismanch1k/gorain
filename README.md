@@ -1,5 +1,8 @@
 # 🌧️ Gorain 🌧️
 
+<img width="1280" height="720" alt="gorain_opt" src="https://github.com/user-attachments/assets/53873eb6-2612-431a-a306-5b0ec6495565" />
+
+
 <p>
   <a href="#english">English</a> |
   <a href="#russian">Русский</a>
